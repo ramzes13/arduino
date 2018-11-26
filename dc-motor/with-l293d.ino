@@ -1,3 +1,4 @@
+#include <Arduino.h>
 /*
 Adafruit Arduino - Lesson 15. Bi-directional Motor
 */
@@ -26,7 +27,6 @@ void loop()
   Serial.print("reverse: ");
   Serial.println(reverse);
   setMotor(speed, reverse);
-  
 }
 
 void setMotor(int speed, boolean reverse)
