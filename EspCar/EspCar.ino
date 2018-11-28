@@ -1,16 +1,9 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-#include <ArduinoJson.h>
+#include <MotorController.h>
 
-const size_t bufferSize = JSON_ARRAY_SIZE(2) + JSON_OBJECT_SIZE(3) + 60;
-DynamicJsonBuffer jsonBuffer(bufferSize);
+MotorController motor1(12);
 
-const char *json = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.75608,2.302038]}";
-
-JsonObject &root = jsonBuffer.parseObject(json);
-
-const char *ssid = "ramzes";
-const char *password = "artemida131990";
 
 String form = "<form action='led'><input type='radio' name='state' value='1' checked>On<input type='radio' name='state' value='0'>Off<input type='submit' value='Submit'></form>";
 
@@ -24,7 +17,8 @@ void handle_adc()
   float val = analogRead(0);
   server.send(200, "text/plain", String(val));
 }
-
+const char *ssid = "ramzes";
+const char *password = "artemida131990";
 void handle_led()
 {
   // get the value of request argument "state" and convert it to an int
