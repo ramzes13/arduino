@@ -1,31 +1,29 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-#include <MotorController.h>
+#include <Car.h>
 
-MotorController motor1(12);
+const char *ssid = "ramzes";
+const char *password = "artemida131990";
 
-
-String form = "<form action='led'><input type='radio' name='state' value='1' checked>On<input type='radio' name='state' value='0'>Off<input type='submit' value='Submit'></form>";
+MotorController *lMotor = new MotorController(4, 5, "lm");
+MotorController *rMotor = new MotorController(12, 14, "rm");
+Car *car = new Car(lMotor, rMotor);
 
 // HTTP server will listen at port 80
 ESP8266WebServer server(80);
 
 const int led = 13;
 
-void handle_adc()
+void handle_move()
 {
-  float val = analogRead(0);
-  server.send(200, "text/plain", String(val));
-}
-const char *ssid = "ramzes";
-const char *password = "artemida131990";
-void handle_led()
-{
-  // get the value of request argument "state" and convert it to an int
-  int state = server.arg("state").toInt();
+  int speed = server.arg("speed").toInt();
+  int directionAngle = server.arg("angle").toInt();
 
-  digitalWrite(led, state);
-  server.send(200, "text/plain", String("LED is now ") + ((state) ? "on" : "off"));
+  Serial.println(speed);
+  Serial.println(directionAngle);
+  car->move(speed, directionAngle);
+
+  server.send(200, "text/plain", "ok");
 }
 
 void setup(void)
@@ -49,20 +47,17 @@ void setup(void)
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  // Set up the endpoints for HTTP server
-  //
-  // Endpoints can be written as inline functions:
-  server.on("/", []() {
-    server.send(200, "text/html", form);
-  });
-
   // And as regular external functions:
-  server.on("/adc", handle_adc);
-  server.on("/led", handle_led);
-
+  server.on("/", handle_move);
+  server.on("/move", handle_move);
+  server.on("/inline", []() {
+    server.send(200, "text/plain", "this works as well");
+  });
   // Start the server
   server.begin();
   Serial.println("HTTP server started");
+
+  car->setup(true);
 }
 
 void loop(void)
