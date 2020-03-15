@@ -1,3 +1,17 @@
 {
-  "C_Cpp.intelliSenseEngineFallback": "Enabled"
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
+  "files.associations": {
+    "*.groovy": "groovy",
+    "functional": "cpp",
+    "system_error": "cpp",
+    "array": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "optional": "cpp",
+    "istream": "cpp",
+    "ostream": "cpp",
+    "*.tcc": "cpp",
+    "streambuf": "cpp"
+  }
 }
